@@ -1,0 +1,77 @@
+# This source file is subject to the (Open Source Initiative) BSD license
+# that is bundled with this package in the LICENSE file. It is also available
+# through the world-wide-web at this URL: http://www.ontic.com.au/license.html
+# If you did not receive a copy of the license and are unable to obtain it through
+# the world-wide-web, please send an email to license@ontic.com.au immediately.
+# Copyright (c) 2010-2016 Ontic. (http://www.ontic.com.au). All rights reserved.
+
+---
+
+- name: 'WordPress | Configure Git repository.'
+  become: yes
+  become_user: '{{ wordpress_user }}'
+  git:
+    accept_hostkey: '{{ wordpress_git.accept_hostkey | default(omit) }}'
+    bare: '{{ wordpress_git.bare | default(omit) }}'
+    clone: '{{ wordpress_git.clone | default(omit) }}'
+    depth: '{{ wordpress_git.depth | default(omit) }}'
+    dest: '{{ wordpress_git.dest }}'
+    executable: '{{ wordpress_git.executable | default(omit) }}'
+    force: '{{ wordpress_git.force | default(omit) }}'
+    key_file: '{{ wordpress_git.key_file | default(omit) }}'
+    recursive: '{{ wordpress_git.recursive | default(omit) }}'
+    reference: '{{ wordpress_git.reference | default(omit) }}'
+    refspec: '{{ wordpress_git.refspec | default(omit) }}'
+    remote: '{{ wordpress_git.remote | default(omit) }}'
+    repo: '{{ wordpress_git.repo }}'
+    ssh_opts: '{{ wordpress_git.ssh_opts | default(omit) }}'
+    track_submodules: '{{ wordpress_git.track_submodules | default(omit) }}'
+    update: yes
+    verify_commit: '{{ wordpress_git.verify_commit | default(omit) }}'
+    version: '{{ wordpress_git.version | default(omit) }}'
+  when: '{{ wordpress_git | default(None) != None }}'
+
+- name: 'WordPress | Configure composer.'
+  become: yes
+  become_user: '{{ wordpress_user }}'
+  composer:
+    arguments: '{{ wordpress_composer.arguments | default(omit) }}'
+    command: '{{ wordpress_composer.command | default(omit) }}'
+    ignore_platform_reqs: '{{ wordpress_composer.ignore_platform_reqs | default(omit) }}'
+    no_dev: '{{ wordpress_composer.no_dev | default(omit) }}'
+    no_plugins: '{{ wordpress_composer.no_plugins | default(omit) }}'
+    no_scripts: '{{ wordpress_composer.no_scripts | default(omit) }}'
+    optimize_autoloader: '{{ wordpress_composer.optimize_autoloader | default(omit) }}'
+    prefer_dist: '{{ wordpress_composer.prefer_dist | default(omit) }}'
+    prefer_source: '{{ wordpress_composer.prefer_source | default(omit) }}'
+    working_dir: '{{ wordpress_composer.working_dir }}'
+  when: '{{ wordpress_composer | default(None) != None }}'
+
+- name: 'WordPress | Configure config file.'
+  become: yes
+  template:
+    src: '{{ wordpress_config_template }}'
+    dest: '{{ wordpress_config_dest }}'
+    owner: '{{ wordpress_user }}'
+    group: '{{ wordpress_group }}'
+    mode: '{{ wordpress_config_mode }}'
+  when: '{{ wordpress_config_dest | default(None) != None }}'
+
+- name: 'WordPress | Configure files.'
+  become: yes
+  file:
+    follow: '{{ item.follow | default(omit) }}'
+    force: '{{ item.force | default(omit) }}'
+    group: '{{ item.group | default(wordpress_group) }}'
+    mode: '{{ item.mode | default(omit) }}'
+    owner: '{{ item.owner | default(wordpress_user) }}'
+    path: '{{ item.path }}'
+    recurse: '{{ item.recurse | default(omit) }}'
+    selevel: '{{ item.selevel | default(omit) }}'
+    serole: '{{ item.serole | default(omit) }}'
+    setype: '{{ item.setype | default(omit) }}'
+    seuser: '{{ item.seuser | default(omit) }}'
+    src: '{{ item.src | default(omit) }}'
+    state: '{{ item.state | default(omit) }}'
+  with_items: '{{ wordpress_files }}'
+  when: '{{ wordpress_files | default(None) != None }}'
