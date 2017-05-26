@@ -1,9 +1,5 @@
-# This source file is subject to the (Open Source Initiative) BSD license
-# that is bundled with this package in the LICENSE file. It is also available
-# through the world-wide-web at this URL: http://www.ontic.com.au/license.html
-# If you did not receive a copy of the license and are unable to obtain it through
-# the world-wide-web, please send an email to license@ontic.com.au immediately.
-# Copyright (c) 2010-2016 Ontic. (http://www.ontic.com.au). All rights reserved.
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
 
 ---
 
@@ -29,7 +25,7 @@
     update: yes
     verify_commit: '{{ wordpress_git.verify_commit | default(omit) }}'
     version: '{{ wordpress_git.version | default(omit) }}'
-  when: '{{ wordpress_git | default(None) != None }}'
+  when: 'wordpress_git | default(None) != None'
 
 - name: 'WordPress | Configure composer.'
   become: yes
@@ -45,7 +41,7 @@
     prefer_dist: '{{ wordpress_composer.prefer_dist | default(omit) }}'
     prefer_source: '{{ wordpress_composer.prefer_source | default(omit) }}'
     working_dir: '{{ wordpress_composer.working_dir }}'
-  when: '{{ wordpress_composer | default(None) != None }}'
+  when: 'wordpress_composer | default(None) != None'
 
 - name: 'WordPress | Configure config file.'
   become: yes
@@ -55,7 +51,7 @@
     owner: '{{ wordpress_user }}'
     group: '{{ wordpress_group }}'
     mode: '{{ wordpress_config_mode }}'
-  when: '{{ wordpress_config_dest | default(None) != None }}'
+  when: 'wordpress_config_dest | default(None) != None'
 
 - name: 'WordPress | Configure files.'
   become: yes
@@ -74,4 +70,4 @@
     src: '{{ item.src | default(omit) }}'
     state: '{{ item.state | default(omit) }}'
   with_items: '{{ wordpress_files }}'
-  when: '{{ wordpress_files | default(None) != None }}'
+  when: 'wordpress_files | default(None) != None'
